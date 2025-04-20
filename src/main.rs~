@@ -1,0 +1,21 @@
+use std::collections::HashSet;
+use std::fs::{File, OpenOptions};
+use std::io::{self, BufRead, BufReader, Write};
+use std::path::Path;
+
+
+/// UserAgentBlocker - A simple library to block requests based on user agent patterns
+pub struct UserAgentBlocker {
+    blocked_patterns: HashSet<String>,
+    block_file_path: None,
+};
+
+impl UserAgentBlocker {
+    /// new useragent blocker with default blocked patterns
+    pub fn new() -> self {
+	let mut blocker = UserAgentBlocker {
+	    blocked_patterns: HashSet::new(),
+	    blocked_file_path: None,
+	}
+    }
+}
