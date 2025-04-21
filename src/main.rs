@@ -17,7 +17,7 @@ impl UserAgentBlocker {
 	    blocked_patterns: HashSet::new(),
 	    blocked_file_path: None,
 	};
-	/// default blocked useragent patterns
+	// default blocked useragent patterns
 
 	blocker.add_default_patterns();
 
@@ -33,10 +33,10 @@ impl UserAgentBlocker {
 	    block_file_path: Some(path_str.clone()),
 	};
 
-	/// now add the default patterns
+	// now add the default patterns
 	blocker.add_default_patterns();
 
-	/// optional patterns loaded from file (Check the TODO from above)
+	// optional patterns loaded from file (Check the TODO from above)
 	let file = File::open(path)?;
 	let reader = BufReader::new(file);
 
@@ -54,6 +54,7 @@ impl UserAgentBlocker {
 
 
 /// Add the default set of blocked user agent patterns
+impl UserAgentBlocker {
 fn add_default_patterns(&mut self) {
         self.blocked_patterns.insert("wget".to_string());
         self.blocked_patterns.insert("curl".to_string());
@@ -69,14 +70,14 @@ fn add_default_patterns(&mut self) {
         self.blocked_patterns.insert("scraper".to_string());
         self.blocked_patterns.insert("httrack".to_string());
         self.blocked_patterns.insert("grabber".to_string());
+    }
 }
-
 /// Check if a user agent should be blocked
-    pub fn should_block(&self, user_agent: &str) -> bool {
+    pub fn should_block(blocker: &UserAgentBlocker, user_agent: &str) -> bool {
+        // use blocker instead of self
         let user_agent = user_agent.to_lowercase();
-        
-        /// Check if user agent contains any blocked patterns
-        for pattern in &self.blocked_patterns {
+        // Check if user agent contains any blocked patterns
+        for pattern in &blocker.blocked_patterns {
             if user_agent.contains(pattern) {
                 return true;
             }
@@ -85,11 +86,13 @@ fn add_default_patterns(&mut self) {
         false
     }
 
+
 /// Check if a user agent should be blocked and return the matching pattern
+impl UserAgentBlocker {
     pub fn block_reason(&self, user_agent: &str) -> Option<String> {
         let user_agent = user_agent.to_lowercase();
         
-        /// Find first matching pattern
+        // Find first matching pattern
         for pattern in &self.blocked_patterns {
             if user_agent.contains(pattern) {
                 return Some(pattern.clone());
@@ -98,8 +101,9 @@ fn add_default_patterns(&mut self) {
         
         None
     }
-
+}
 /// Add a new pattern to block
+impl UserAgentBlocker {
     pub fn add_pattern(&mut self, pattern: &str) -> bool {
         let pattern = pattern.trim().to_lowercase();
         if pattern.is_empty() {
@@ -117,7 +121,7 @@ fn add_default_patterns(&mut self) {
         
         is_new
     }
-    
+}
     /// Remove a pattern from the blocklist
     pub fn remove_pattern(&mut self, pattern: &str) -> bool {
         let pattern = pattern.trim().to_lowercase();
@@ -133,12 +137,15 @@ fn add_default_patterns(&mut self) {
         removed
     }
     
-    /// Get all blocked patterns
+/// Get all blocked patterns
+impl UserAgentBlocker {    
     pub fn get_patterns(&self) -> Vec<String> {
         self.blocked_patterns.iter().cloned().collect()
     }
-    
-    /// Save patterns to file
+}
+
+/// Save patterns to file
+impl UserAgentBlocker {
     fn save_patterns_to_file(&self, path: &str) -> io::Result<()> {
         let mut file = OpenOptions::new()
             .write(true)
@@ -146,10 +153,10 @@ fn add_default_patterns(&mut self) {
             .truncate(true)
             .open(path)?;
             
-        /// Write header
+        // Write header
         writeln!(file, "# User agent patterns to block (one per line)")?;
         
-        /// Write patterns
+        // Write patterns
         for pattern in &self.blocked_patterns {
             writeln!(file, "{}", pattern)?;
         }
@@ -157,4 +164,3 @@ fn add_default_patterns(&mut self) {
         Ok(())
     }
 }
-

@@ -210,10 +210,12 @@ The library comes with these default patterns:
 - The library uses string contains matching, which is simple but effective
 - For high-traffic sites, consider using a more sophisticated regex-based approach
 
-## License
-
-MIT
-
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
+
+## TODO
+- Main Fuction
+- Fix errors with error lese
+- make a small implementation
+- and break up the functions between files for more readability
